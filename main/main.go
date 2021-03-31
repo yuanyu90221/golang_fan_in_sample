@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"time"
 
 	fan "github.com/yuanyu90221/golang_fan_in_sample/fan"
 )
@@ -24,4 +26,31 @@ func main() {
 	for v := range fan.CaMerge(ch1, ch2) {
 		fmt.Println("Average:", v)
 	}
+	doContextTest()
+}
+func doContextTest() {
+	ctx, cancel := context.WithCancel(context.Background())
+
+	go func() {
+		n := 0
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				n++
+				fmt.Println("Result:", square(n))
+			}
+		}
+	}()
+
+	time.Sleep(time.Second * 3)
+	fmt.Println("cancelling context...")
+	cancel()
+	fmt.Println("context cancelled")
+	time.Sleep(time.Second * 3)
+}
+func square(n int) int {
+	time.Sleep(time.Millisecond * 200)
+	return n * n
 }
