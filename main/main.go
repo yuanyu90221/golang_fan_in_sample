@@ -16,5 +16,12 @@ func main() {
 	for ret := range fan.Merge(c1, c2, c3) {
 		fmt.Printf("%3d", ret)
 	}
+	ints := fan.Generate()
+	ch1 := fan.Average(ints)
+	ch2 := fan.Average(ints)
+
 	fmt.Println()
+	for v := range fan.CaMerge(ch1, ch2) {
+		fmt.Println("Average:", v)
+	}
 }
